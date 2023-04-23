@@ -19,11 +19,9 @@ _browser_modules: Dict[str, ModuleType] = {'chrome':   chm,
 def _build_url_from_dict(page: Dict[str, str], options: OptionsDictT) -> str:
     scheme = page.get('scheme', 'http')
     host = page.get('host', 'localhost')
-    port = page.get('port', options["port"])
+    port = ':%s' % page.get('port', options['port']) if scheme != 'file' else ''
     path = page.get('path', '')
-    if not isinstance(port, (int, str)):
-        raise TypeError("'port' option must be an integer")
-    return '%s://%s:%d/%s' % (scheme, host, int(port), path)
+    return '%s://%s%s/%s' % (scheme, host, port, path)
 
 
 def _build_url_from_string(page: str, options: OptionsDictT) -> str:
